@@ -122,7 +122,7 @@ Structured InformationStandards`_ (OASIS).
 %license LICENSE.txt
 %{_bindir}/pykmip-server
 %{python3_sitelib}/kmip
-%{python3_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
+%{python3_sitelib}/%{pypi_name}-%{version}-py%{python3_version}.egg-info
 %endif
 
 %changelog
