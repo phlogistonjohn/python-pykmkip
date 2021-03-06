@@ -1,0 +1,11 @@
+--- PyKMIP-0.8.0/setup.py.orig	2017-12-08 18:36:18.000000000 +0100
++++ PyKMIP-0.8.0/setup.py	2021-03-06 09:29:23.492782922 +0100
+@@ -43,7 +43,7 @@
+     },
+     install_requires=[
+         "cryptography",
+-        "enum34",
++        "enum34; python_version < '3.4'",
+         "six",
+         "sqlalchemy"
+     ],

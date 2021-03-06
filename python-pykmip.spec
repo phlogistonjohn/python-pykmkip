@@ -11,12 +11,13 @@
 
 Name:           python-%{sname}
 Version:        0.8.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Python implementation of the Key Management Interoperability Protocol
 
 License:        ASL 2.0
 URL:            https://github.com/OpenKMIP/PyKMIP
 Source0:        https://pypi.python.org/packages/source/P/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+Patch0:         enum34.patch
 BuildArch:      noarch
 
 %description
@@ -126,6 +127,10 @@ Structured InformationStandards`_ (OASIS).
 %endif
 
 %changelog
+* Sat Mar 06 2021 Alan Pevec <apevec AT gmail.com> 0.8.0-9
+- Drop bogus enum34 requirement
+  Resolves: rhbz#1924317 - F34FailsToInstall: python3-pykmip
+
 * Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 0.8.0-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
