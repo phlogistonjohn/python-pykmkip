@@ -11,7 +11,7 @@
 
 Name:           python-%{sname}
 Version:        0.8.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Python implementation of the Key Management Interoperability Protocol
 
 License:        ASL 2.0
@@ -127,6 +127,9 @@ Structured InformationStandards`_ (OASIS).
 %endif
 
 %changelog
+* Fri Jun 04 2021 Python Maint <python-maint@redhat.com> - 0.8.0-10
+- Rebuilt for Python 3.10
+
 * Sat Mar 06 2021 Alan Pevec <apevec AT gmail.com> 0.8.0-9
 - Drop bogus enum34 requirement
   Resolves: rhbz#1924317 - F34FailsToInstall: python3-pykmip
