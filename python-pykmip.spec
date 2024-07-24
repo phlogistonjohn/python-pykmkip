@@ -11,10 +11,11 @@
 
 Name:           python-%{sname}
 Version:        0.8.0
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Python implementation of the Key Management Interoperability Protocol
 
-License:        ASL 2.0
+# Automatically converted from old format: ASL 2.0 - review is highly recommended.
+License:        Apache-2.0
 URL:            https://github.com/OpenKMIP/PyKMIP
 Source0:        https://pypi.python.org/packages/source/P/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 Patch0:         enum34.patch
@@ -127,6 +128,9 @@ Structured InformationStandards`_ (OASIS).
 %endif
 
 %changelog
+* Wed Jul 24 2024 Miroslav Suchý <msuchy@redhat.com> - 0.8.0-22
+- convert license to SPDX
+
 * Fri Jul 19 2024 Fedora Release Engineering <releng@fedoraproject.org> - 0.8.0-21
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
 
