@@ -1,0 +1,25 @@
+From 645cbf2ae931b03b8f5ebe2458683da1b2276794 Mon Sep 17 00:00:00 2001
+From: Joel Capitao <jcapitao@redhat.com>
+Date: Tue, 15 Sep 2020 15:50:41 +0200
+Subject: [PATCH] Set the except clause as a parenthesized tuple
+
+---
+ kmip/demos/pie/locate.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kmip/demos/pie/locate.py b/kmip/demos/pie/locate.py
+index 549056e..7aedce1 100644
+--- a/kmip/demos/pie/locate.py
++++ b/kmip/demos/pie/locate.py
+@@ -63,7 +63,7 @@ if __name__ == '__main__':
+     for initial_date in initial_dates:
+         try:
+             t = time.strptime(initial_date)
+-        except ValueError, TypeError:
++        except (ValueError, TypeError):
+             logger.error(
+                 "Invalid initial date provided: {}".format(initial_date)
+             )
+-- 
+2.50.1
+

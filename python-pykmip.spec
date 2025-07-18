@@ -10,15 +10,16 @@
 %endif
 
 Name:           python-%{sname}
-Version:        0.8.0
-Release:        24%{?dist}
+Version:        0.10.0
+Release:        1%{?dist}
 Summary:        Python implementation of the Key Management Interoperability Protocol
 
 # Automatically converted from old format: ASL 2.0 - review is highly recommended.
 License:        Apache-2.0
 URL:            https://github.com/OpenKMIP/PyKMIP
 Source0:        https://pypi.python.org/packages/source/P/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
-Patch0:         enum34.patch
+Patch0:         0001-Set-the-except-clause-as-a-parenthesized-tuple.patch
+Patch1:         0002-setup.py-revert-to-conditional-enum34.patch
 BuildArch:      noarch
 
 %description
@@ -87,7 +88,7 @@ Structured InformationStandards`_ (OASIS).
 %endif
 
 %prep
-%autosetup -n %{pypi_name}-%{version}
+%autosetup -p1 -n %{pypi_name}-%{version}
 
 %build
 %if %{with python2}
@@ -128,6 +129,9 @@ Structured InformationStandards`_ (OASIS).
 %endif
 
 %changelog
+* Fri Jul 18 2025 John Mulligan <phlogistonjohn@asynchrono.us> - 0.10.0-1
+- Update to 0.10.0
+
 * Mon Jun 02 2025 Python Maint <python-maint@redhat.com> - 0.8.0-24
 - Rebuilt for Python 3.14
 

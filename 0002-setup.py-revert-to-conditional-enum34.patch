@@ -1,0 +1,30 @@
+From fe961d768fb925efbb4d596746dd2361e4e53a32 Mon Sep 17 00:00:00 2001
+From: John Mulligan <jmulligan@redhat.com>
+Date: Fri, 18 Jul 2025 18:33:32 -0400
+Subject: [PATCH] setup.py: revert to conditional enum34
+
+The `enum-compat` dependency for python >= 3.4 confuses rpm's
+python deps support. Restore the old behavior but on the 0.10.0
+version of setup.py.
+
+Signed-off-by: John Mulligan <jmulligan@redhat.com>
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index eba36b1..1c6d8ed 100644
+--- a/setup.py
++++ b/setup.py
+@@ -50,7 +50,7 @@ setuptools.setup(
+     },
+     install_requires=[
+         "cryptography",
+-        "enum-compat",
++        "enum34; python_version < '3.4'",
+         "requests",
+         "six",
+         "sqlalchemy"
+-- 
+2.50.1
+
