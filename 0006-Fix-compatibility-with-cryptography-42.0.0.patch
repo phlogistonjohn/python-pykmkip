@@ -1,0 +1,85 @@
+From 6526b7cb4427cd2d24c213a3678cf9597a4259f3 Mon Sep 17 00:00:00 2001
+From: Takashi Kajinami <kajinamit@oss.nttdata.com>
+Date: Thu, 28 Mar 2024 18:10:07 +0900
+Subject: [PATCH] Fix compatibility with cryptography >= 42.0.0
+
+The load_der_public_key method and the load_pem_private_key method were
+removed from Backend class in cryptography 42.0.0[1].
+
+Closes #713
+
+[1] https://github.com/pyca/cryptography/commit/41daf2d86dd9bf18081802fa5d851a7953810786
+
+(cherry picked from commit 4d3b5a52ae6aad1d010c9487d7f132f33295ee3a)
+---
+ kmip/services/server/crypto/engine.py | 24 ++++++++++++++++--------
+ requirements.txt                      |  2 +-
+ 2 files changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/kmip/services/server/crypto/engine.py b/kmip/services/server/crypto/engine.py
+index 02a1c34..79f2b0f 100644
+--- a/kmip/services/server/crypto/engine.py
++++ b/kmip/services/server/crypto/engine.py
+@@ -585,13 +585,17 @@ class CryptographyEngine(api.CryptographicEngine):
+                     "encryption.".format(padding_method)
+                 )
+ 
+-            backend = default_backend()
+-
+             try:
+-                public_key = backend.load_der_public_key(encryption_key)
++                public_key = serialization.load_der_public_key(
++                    encryption_key,
++                    backend=default_backend()
++                )
+             except Exception:
+                 try:
+-                    public_key = backend.load_pem_public_key(encryption_key)
++                    public_key = serialization.load_pem_public_key(
++                        encryption_key,
++                        backend=default_backend()
++                    )
+                 except Exception:
+                     raise exceptions.CryptographicFailure(
+                         "The public key bytes could not be loaded."
+@@ -1434,8 +1438,6 @@ class CryptographyEngine(api.CryptographicEngine):
+                 loaded, or when the signature verification process fails
+                 unexpectedly.
+         """
+-        backend = default_backend()
+-
+         hash_algorithm = None
+         dsa_hash_algorithm = None
+         dsa_signing_algorithm = None
+@@ -1489,10 +1491,16 @@ class CryptographyEngine(api.CryptographicEngine):
+                 )
+ 
+             try:
+-                public_key = backend.load_der_public_key(signing_key)
++                public_key = serialization.load_der_public_key(
++                    signing_key,
++                    backend=default_backend()
++                )
+             except Exception:
+                 try:
+-                    public_key = backend.load_pem_public_key(signing_key)
++                    public_key = serialization.load_pem_public_key(
++                        signing_key,
++                        backend=default_backend()
++                    )
+                 except Exception:
+                     raise exceptions.CryptographicFailure(
+                         "The signing key bytes could not be loaded."
+diff --git a/requirements.txt b/requirements.txt
+index bee04c9..c74a7ba 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1,4 +1,4 @@
+-cryptography>=1.4
++cryptography>=2.5
+ enum-compat
+ requests
+ six>=1.11.0
+-- 
+2.51.1
+

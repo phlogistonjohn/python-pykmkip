@@ -1,0 +1,100 @@
+From 0faca2ff531c0ad6ba6f3416b45dfa89a8013842 Mon Sep 17 00:00:00 2001
+From: Yohai Meiron <yohai.meiron@scinet.utoronto.ca>
+Date: Thu, 28 Aug 2025 08:11:51 -0400
+Subject: [PATCH] Use SSL context
+
+Conflicts:
+	setup.py
+
+(cherry picked from commit e629aedb51d14ef103739d2eb7298dde3bd7be0a)
+---
+ kmip/services/kmip_client.py   | 15 +++++++++------
+ kmip/services/server/server.py | 17 ++++++++++-------
+ setup.py                       | 13 +++++++------
+ 3 files changed, 26 insertions(+), 19 deletions(-)
+
+diff --git a/kmip/services/kmip_client.py b/kmip/services/kmip_client.py
+index 7f72adf..834a6a5 100644
+--- a/kmip/services/kmip_client.py
++++ b/kmip/services/kmip_client.py
+@@ -285,13 +285,16 @@ class KMIPProxy(object):
+             six.reraise(*last_error)
+ 
+     def _create_socket(self, sock):
+-        self.socket = ssl.wrap_socket(
+-            sock,
++        context = ssl.create_default_context()
++        context.verify_mode = self.cert_reqs
++        context.check_hostname = False
++        context.load_cert_chain(
+             keyfile=self.keyfile,
+-            certfile=self.certfile,
+-            cert_reqs=self.cert_reqs,
+-            ssl_version=self.ssl_version,
+-            ca_certs=self.ca_certs,
++            certfile=self.certfile
++        )
++        context.load_verify_locations(cafile=self.ca_certs)
++        self.socket = context.wrap_socket(
++            sock,
+             do_handshake_on_connect=self.do_handshake_on_connect,
+             suppress_ragged_eofs=self.suppress_ragged_eofs)
+         self.socket.settimeout(self.timeout)
+diff --git a/kmip/services/server/server.py b/kmip/services/server/server.py
+index 534ab61..85c274f 100644
+--- a/kmip/services/server/server.py
++++ b/kmip/services/server/server.py
+@@ -287,17 +287,20 @@ class KmipServer(object):
+         for cipher in auth_suite_ciphers:
+             self._logger.debug(cipher)
+ 
+-        self._socket = ssl.wrap_socket(
+-            self._socket,
+-            keyfile=self.config.settings.get('key_path'),
++        context = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
++        context.verify_mode = ssl.CERT_REQUIRED
++        context.check_hostname = False
++        context.load_cert_chain(
+             certfile=self.config.settings.get('certificate_path'),
++            keyfile=self.config.settings.get('key_path'),
++        )
++        context.load_verify_locations(cafile=self.config.settings.get('ca_path'))
++        context.set_ciphers(self.auth_suite.ciphers)
++        self._socket = context.wrap_socket(
++            self._socket,
+             server_side=True,
+-            cert_reqs=ssl.CERT_REQUIRED,
+-            ssl_version=self.auth_suite.protocol,
+-            ca_certs=self.config.settings.get('ca_path'),
+             do_handshake_on_connect=False,
+             suppress_ragged_eofs=True,
+-            ciphers=self.auth_suite.ciphers
+         )
+ 
+         try:
+diff --git a/setup.py b/setup.py
+index eba36b1..144eda4 100644
+--- a/setup.py
++++ b/setup.py
+@@ -63,11 +63,12 @@ setuptools.setup(
+         "Operating System :: POSIX :: BSD",
+         "Operating System :: POSIX :: Linux",
+         "Programming Language :: Python",
+-        "Programming Language :: Python :: 2",
+-        "Programming Language :: Python :: 2.7",
+-        "Programming Language :: Python :: 3.4",
+-        "Programming Language :: Python :: 3.5",
+-        "Programming Language :: Python :: 3.6",
+-        "Programming Language :: Python :: 3.7",
++        "Programming Language :: Python :: 3",
++        "Programming Language :: Python :: 3 :: Only",
++        "Programming Language :: Python :: 3.8",
++        "Programming Language :: Python :: 3.9",
++        "Programming Language :: Python :: 3.10",
++        "Programming Language :: Python :: 3.11",
++        "Programming Language :: Python :: 3.12",
+     ],
+ )
+-- 
+2.51.1
+

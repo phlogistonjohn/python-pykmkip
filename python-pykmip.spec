@@ -11,7 +11,7 @@
 
 Name:           python-%{sname}
 Version:        0.10.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Python implementation of the Key Management Interoperability Protocol
 
 # Automatically converted from old format: ASL 2.0 - review is highly recommended.
@@ -20,6 +20,10 @@ URL:            https://github.com/OpenKMIP/PyKMIP
 Source0:        https://pypi.python.org/packages/source/P/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 Patch0:         0001-Set-the-except-clause-as-a-parenthesized-tuple.patch
 Patch1:         0002-setup.py-revert-to-conditional-enum34.patch
+Patch2:         0003-use-ssl-context.patch
+Patch3:         0004-Brought-in-line-with-707.patch
+Patch4:         0005-Add-cryptography-39.0.0-support.patch
+Patch5:         0006-Fix-compatibility-with-cryptography-42.0.0.patch
 BuildArch:      noarch
 
 %description
@@ -129,6 +133,10 @@ Structured InformationStandards`_ (OASIS).
 %endif
 
 %changelog
+* Mon Nov 03 2025 John Mulligan <phlogistonjohn@asynchrono.us> - 0.10.0-2
+- Add patches to use SSL context not wrap_socket
+- Add patches to improve compatibility with cryptography lib
+
 * Fri Jul 18 2025 John Mulligan <phlogistonjohn@asynchrono.us> - 0.10.0-1
 - Update to 0.10.0
 

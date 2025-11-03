@@ -1,0 +1,51 @@
+From 0e32a9c9ba01447aaa8355babff123dfcff5e67c Mon Sep 17 00:00:00 2001
+From: Daniel Garcia Moreno <daniel.garcia@suse.com>
+Date: Thu, 26 Jan 2023 13:07:54 +0100
+Subject: [PATCH] Add cryptography >= 39.0.0 support
+
+The cryptography release 39.0.0 added a new parameter to the
+backend.load_pem_private_key and backend.load_der_private_key
+that's required. This patch uses the serialization method to load keys
+because there the new parameter is optional.
+
+https://cryptography.io/en/latest/changelog/#v39-0-0
+
+This patch fixes the tests test_encrypt_decrypt_asymmetric
+
+(cherry picked from commit 652d5cab67dbc28c96af4eb4ed8bcf2b47c95e12)
+---
+ kmip/services/server/crypto/engine.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/kmip/services/server/crypto/engine.py b/kmip/services/server/crypto/engine.py
+index 838e1b9..02a1c34 100644
+--- a/kmip/services/server/crypto/engine.py
++++ b/kmip/services/server/crypto/engine.py
+@@ -929,18 +929,18 @@ class CryptographyEngine(api.CryptographicEngine):
+                     "decryption.".format(padding_method)
+                 )
+ 
+-            backend = default_backend()
+-
+             try:
+-                private_key = backend.load_der_private_key(
++                private_key = serialization.load_der_private_key(
+                     decryption_key,
+-                    None
++                    password=None,
++                    backend=default_backend()
+                 )
+             except Exception:
+                 try:
+-                    private_key = backend.load_pem_private_key(
++                    private_key = serialization.load_pem_private_key(
+                         decryption_key,
+-                        None
++                        password=None,
++                        backend=default_backend()
+                     )
+                 except Exception:
+                     raise exceptions.CryptographicFailure(
+-- 
+2.51.1
+
