@@ -18,15 +18,15 @@ def parse_cli():
     parser.add_argument("--policy")
     parser.add_argument(
         "--tls-cert",
-        default="_ca/client.crt",
+        default="_tls/client.crt",
     )
     parser.add_argument(
         "--tls-key",
-        default="_ca/client.key",
+        default="_tls/client.key",
     )
     parser.add_argument(
         "--tls-ca-cert",
-        default="_ca/ca/ca.crt",
+        default="_tls/ca.crt",
     )
     parser.add_argument("--host", default="192.168.76.1")
     parser.add_argument("--port", default=5696, type=int)
