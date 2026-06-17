@@ -11,7 +11,7 @@
 
 Name:           python-%{sname}
 Version:        0.10.0
-Release:        2%{?dist}
+Release:        100%{?dist}
 Summary:        Python implementation of the Key Management Interoperability Protocol
 
 # Automatically converted from old format: ASL 2.0 - review is highly recommended.
