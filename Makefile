@@ -1,4 +1,4 @@
-IMAGE:=quay.io/phlogistonjohn/asdf:kmip
+IMAGE:=quay.io/phlogistonjohn/pykmip:test
 KMIP_DIR:=.
 KMIP_PORT:=5696
 
